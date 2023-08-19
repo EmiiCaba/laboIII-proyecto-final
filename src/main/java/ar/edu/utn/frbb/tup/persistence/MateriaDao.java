@@ -1,8 +1,10 @@
 package ar.edu.utn.frbb.tup.persistence;
 
 import ar.edu.utn.frbb.tup.model.Materia;
+import ar.edu.utn.frbb.tup.persistence.exception.MateriaNotFoundException;
 
 public interface MateriaDao {
-    public Materia save(Materia materia);
+     Materia save(Materia materia);
 
+     Materia findById(String idMateria)throws MateriaNotFoundException;
 }

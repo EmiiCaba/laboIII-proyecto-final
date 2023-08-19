@@ -1,40 +1,34 @@
 package ar.edu.utn.frbb.tup.model;
 
-import java.util.List;
-import java.util.Random;
+import ar.edu.utn.frbb.tup.business.RandomIDGenerateService;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.List;
+
+@Getter @Setter
 public class Profesor {
 
-    private final long id = 12;
-    private final String nombre;
-    private final String apellido;
-    private final String titulo;
+   private Integer idProfesor ;
+    private  String nombre;
+    private  String apellido;
+    private String titulo;
 
     private List<Materia> materiasDictadas;
+
+    RandomIDGenerateService randomIDGenerateService;
+    public Profesor() {randomIDGenerateService = RandomIDGenerateService.getInstance();
+        this.idProfesor = Integer.parseInt(randomIDGenerateService.generateId(5));
+    }
 
     public Profesor(String nombre, String apellido, String titulo) {
         this.apellido = apellido;
         this.nombre = nombre;
         this.titulo = titulo;
+        this.idProfesor= Integer.parseInt(RandomIDGenerateService.getInstance().generateId(5));
+
     }
 
-    public String getNombre() {
-        return nombre;
-    }
 
-    public String getApellido() {
-        return apellido;
-    }
 
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public List<Materia> getMateriasDictadas() {
-        return materiasDictadas;
-    }
-
-    public void setMateriasDictadas(List<Materia> materiasDictadas) {
-        this.materiasDictadas = materiasDictadas;
-    }
 }

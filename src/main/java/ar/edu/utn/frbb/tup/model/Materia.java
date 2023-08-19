@@ -1,27 +1,39 @@
 package ar.edu.utn.frbb.tup.model;
 
+import ar.edu.utn.frbb.tup.business.RandomIDGenerateService;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Materia {
 
-    private int materiaId;
+    private String materiaId;
     private String nombre;
+    private int anio;
+    private int cuatrimestre;
+    private Profesor profesor;
+
+    private List<Materia> correlatividades;
+
 
     public void setNombre(String nombre) {
+
         this.nombre = nombre;
     }
 
     public int getAnio() {
+
         return anio;
     }
 
     public void setAnio(int anio) {
+
         this.anio = anio;
     }
 
     public int getCuatrimestre() {
+
         return cuatrimestre;
     }
 
@@ -41,13 +53,10 @@ public class Materia {
         this.correlatividades = correlatividades;
     }
 
-    private int anio;
-    private int cuatrimestre;
-    private Profesor profesor;
 
-    private List<Materia> correlatividades;
+    public Materia(){
 
-    public Materia(){}
+    }
 
 
     public Materia(String nombre, int anio, int cuatrimestre, Profesor profesor) {
@@ -55,6 +64,7 @@ public class Materia {
         this.cuatrimestre = cuatrimestre;
         this.nombre = nombre;
         this.profesor = profesor;
+        this.materiaId= RandomIDGenerateService.getInstance().generateId(4);
 
         correlatividades = new ArrayList<>();
     }
@@ -72,11 +82,11 @@ public class Materia {
         return nombre;
     }
 
-    public int getMateriaId() {
+    public String getMateriaId() {
         return materiaId;
     }
 
-    public void setMateriaId(int materiaId) {
+    public void setMateriaId(String materiaId) {
         this.materiaId = materiaId;
     }
 

@@ -1,43 +1,58 @@
 package ar.edu.utn.frbb.tup.persistence;
 
 import ar.edu.utn.frbb.tup.model.Alumno;
-import ar.edu.utn.frbb.tup.persistence.exception.DaoException;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import ar.edu.utn.frbb.tup.model.exception.AlumnoNoEncontradoException;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
-
-@Service
+@Repository
 public class AlumnoDaoMemoryImpl implements AlumnoDao {
 
-    private static Map<Long, Alumno> repositorioAlumnos = new HashMap<>();
+    private static Map<Integer, Alumno> repositorioAlumnos = new HashMap<>();
 
     @Override
     public Alumno saveAlumno(Alumno alumno) {
-        Random random = new Random();
-        alumno.setId(random.nextLong());
-        return repositorioAlumnos.put(alumno.getDni(), alumno);
+        repositorioAlumnos.put(alumno.getIdAlumno(), alumno);
+        return alumno;
     }
 
     @Override
-    public Alumno findAlumno(String apellidoAlumno) {
-        for (Alumno a: repositorioAlumnos.values()) {
-            if (a.getApellido().equals(apellidoAlumno)){
+    public Alumno findAlumnoByLastName(String apellidoAlumno) throws AlumnoNoEncontradoException {
+        for (Alumno a : repositorioAlumnos.values()) {
+            if (a.getApellido().equals(apellidoAlumno)) {
                 return a;
             }
         }
-        throw new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "No existen alumnos con esos datos."
-        );
+        throw new AlumnoNoEncontradoException("No se encontró ningún alumno con el apellido " + apellidoAlumno);
     }
 
     @Override
-    public Alumno loadAlumno(Long dni) {
-        return null;
+    public Alumno loadAlumnoPorDni(Integer dni) throws AlumnoNoEncontradoException {
+        for (Alumno a : repositorioAlumnos.values()) {
+            if (a.getDni().equals(dni)) {
+                return a;
+            }
+        }
+        throw new AlumnoNoEncontradoException("No se encontró ningún alumno con el DNI " + dni);
     }
 
+    @Override
+    public Alumno findAlumnoByID(Integer idAlumno) throws AlumnoNoEncontradoException {
+        if (repositorioAlumnos.containsKey(idAlumno)) {
+            return repositorioAlumnos.get(idAlumno);
+        } else {
+            throw new AlumnoNoEncontradoException("No se encontró el alumno con ID " + idAlumno);
+        }
+    }
+
+    @Override
+    public void delete(Alumno alumno) throws AlumnoNoEncontradoException {
+        if (repositorioAlumnos.containsKey(alumno.getIdAlumno())) {
+            repositorioAlumnos.remove(alumno.getIdAlumno());
+        } else {
+            throw new AlumnoNoEncontradoException("No se encontró el alumno a eliminar");
+        }
+    }
 }

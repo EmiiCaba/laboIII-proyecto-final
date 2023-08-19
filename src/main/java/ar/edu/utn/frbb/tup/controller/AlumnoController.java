@@ -1,9 +1,12 @@
 package ar.edu.utn.frbb.tup.controller;
 
 import ar.edu.utn.frbb.tup.business.AlumnoService;
+import ar.edu.utn.frbb.tup.model.exception.AlumnoNoEncontradoException;
 import ar.edu.utn.frbb.tup.model.Alumno;
 import ar.edu.utn.frbb.tup.model.dto.AlumnoDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,9 +23,10 @@ public class AlumnoController {
 
     }
     @GetMapping
-    public Alumno buscarAlumno(@RequestParam String apellido) {
-
-       return alumnoService.buscarAlumno(apellido);
+    public ResponseEntity <Alumno> buscarAlumnoPorApellido (@RequestParam String apellidoAlumno) throws AlumnoNoEncontradoException {
+        if (alumnoService.buscarAlumnoPorApellido( apellidoAlumno) == null)
+            return new ResponseEntity<Alumno>(alumnoService.buscarAlumnoPorApellido( apellidoAlumno), HttpStatus.NOT_FOUND);
+       return new ResponseEntity<Alumno>( alumnoService.buscarAlumnoPorApellido( apellidoAlumno), HttpStatus.OK);
 
     }
 }

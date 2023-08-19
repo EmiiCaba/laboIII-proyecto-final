@@ -3,7 +3,15 @@ package ar.edu.utn.frbb.tup.model.dto;
 public class AlumnoDto {
     String nombre;
     String apellido;
-    long dni;
+    Integer dni;
+    String idAlumno;
+
+
+
+
+    public void setIdAlumno(String idAlumno) {
+        this.idAlumno = idAlumno;
+    }
 
     public String getNombre() {
         return nombre;
@@ -21,11 +29,17 @@ public class AlumnoDto {
         this.apellido = apellido;
     }
 
-    public long getDni() {
+    public Integer getDni() {
         return dni;
     }
 
-    public void setDni(long dni) {
+    public String getIdAlumno() {
+        return idAlumno;
+    }
+
+
+
+    public void setDni(Integer dni) {
         this.dni = dni;
     }
 }

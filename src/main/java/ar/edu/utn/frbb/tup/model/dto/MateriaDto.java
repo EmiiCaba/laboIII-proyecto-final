@@ -1,22 +1,17 @@
 package ar.edu.utn.frbb.tup.model.dto;
 
-import ar.edu.utn.frbb.tup.model.Materia;
-import ar.edu.utn.frbb.tup.model.Profesor;
-
-import java.util.List;
-
 public class MateriaDto {
     private String nombre;
     private int anio;
     private int cuatrimestre;
-    private long profesorId;
+    private String idProfesor;
 
-    public long getProfesorId() {
-        return profesorId;
+    public String getidProfesor() {
+        return idProfesor;
     }
 
-    public void setProfesorId(long profesorId) {
-        this.profesorId = profesorId;
+    public void setiDProfesor(String idProfesor) {
+        this.idProfesor = idProfesor;
     }
 
     public String getNombre() {

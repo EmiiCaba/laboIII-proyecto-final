@@ -1,118 +1,54 @@
 package ar.edu.utn.frbb.tup.model;
-
-
-
-
-import ar.edu.utn.frbb.tup.model.exception.AsignaturaInexistenteException;
-import ar.edu.utn.frbb.tup.model.exception.CorrelatividadException;
-import ar.edu.utn.frbb.tup.model.exception.EstadoIncorrectoException;
-
+import ar.edu.utn.frbb.tup.business.RandomIDGenerateService;
+import lombok.Getter;
+import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
-
+@Getter
+@Setter
 public class Alumno {
-    private long id;
-
+    private int idAlumno;
     private String nombre;
     private String apellido;
-    private long dni;
-
+    private Integer dni;
     private List<Asignatura> asignaturas;
-
-    public Alumno() {
+    RandomIDGenerateService randomIDGenerateService;
+    public Alumno() {randomIDGenerateService = RandomIDGenerateService.getInstance();
+        this.idAlumno = Integer.parseInt(randomIDGenerateService.generateId(6));
     }
-    public Alumno(String nombre, String apellido, long dni) {
+    public Alumno(String nombre, String apellido, Integer dni, RandomIDGenerateService randomIDGenerateService) {
+        randomIDGenerateService = RandomIDGenerateService.getInstance();
         this.nombre = nombre;
         this.apellido = apellido;
         this.dni = dni;
-
+        this.idAlumno = Integer.parseInt(randomIDGenerateService.generateId(6));
         asignaturas = new ArrayList<>();
 
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    @Override
+    public String toString() {
+        return "Alumno{" +
+                "idAlumno=" + idAlumno +
+                ", nombre='" + nombre + '\'' +
+                ", apellido='" + apellido + '\'' +
+                ", dni=" + dni +
+                ", asignaturas=" + asignaturas +
+                '}';
     }
 
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
+    @Override
+    public int hashCode() {
+        return idAlumno;
     }
 
-    public void setDni(long dni) {
-        this.dni = dni;
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Alumno alumno = (Alumno) obj;
+        return  idAlumno == alumno.getIdAlumno();
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public long getDni() {
-        return dni;
-    }
-
-    public void agregarAsignatura(Asignatura a){
-        this.asignaturas.add(a);
-    }
-
-    public List<Asignatura> obtenerListaAsignaturas(){
-        return this.asignaturas;
-    }
-
-    public void aprobarAsignatura(Materia materia, int nota) throws EstadoIncorrectoException, CorrelatividadException, AsignaturaInexistenteException {
-        Asignatura asignaturaAAprobar = getAsignaturaAAprobar(materia);
-
-        for (Materia correlativa :
-                materia.getCorrelatividades()) {
-            chequearCorrelatividad(correlativa);
-        }
-        asignaturaAAprobar.aprobarAsignatura(nota);
-    }
-
-    private void chequearCorrelatividad(Materia correlativa) throws CorrelatividadException {
-        for (Asignatura a:
-                asignaturas) {
-            if (correlativa.getNombre().equals(a.getNombreAsignatura())) {
-                if (!EstadoAsignatura.APROBADA.equals(a.getEstado())) {
-                    throw new CorrelatividadException("La asignatura " + a.getNombreAsignatura() + " no está aprobada");
-                }
-            }
-        }
-    }
-
-    private Asignatura getAsignaturaAAprobar(Materia materia) throws AsignaturaInexistenteException {
-
-        for (Asignatura a: asignaturas) {
-            if (materia.getNombre().equals(a.getNombreAsignatura())) {
-                return a;
-            }
-        }
-        throw new AsignaturaInexistenteException("No se encontró la materia");
-    }
-
-    public boolean puedeAprobar(Asignatura asignatura) {
-        return true;
-    }
-
-    public void actualizarAsignatura(Asignatura asignatura) {
-        for (Asignatura a:
-             asignaturas) {
-            if (a.getNombreAsignatura().equals(asignatura.getNombreAsignatura())) {
-                a.setEstado(asignatura.getEstado());
-                a.setNota(asignatura.getNota().get());
-            }
-        }
-
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
+    public void actualizarAsignatura(Asignatura a) {}
 }
