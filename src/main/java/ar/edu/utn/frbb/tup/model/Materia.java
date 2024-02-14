@@ -1,105 +1,70 @@
 package ar.edu.utn.frbb.tup.model;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
-import ar.edu.utn.frbb.tup.business.RandomIDGenerateService;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Getter
+@Setter
+@EqualsAndHashCode
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Materia {
 
-    private String materiaId;
+    private int idMateria;
     private String nombre;
     private int anio;
     private int cuatrimestre;
-    private Profesor profesor;
+    private List<Integer> correlatividades;
+    private int idProfesor;
+    private int idCarrera;
+    private static Integer contador = 0;
 
-    private List<Materia> correlatividades;
 
 
-    public void setNombre(String nombre) {
-
+    public Materia(String nombre, int anio, int cuatrimestre, List<Integer> correlatividades, int idCarrera,  Integer idProfesor) {
+        setIdMateria();
         this.nombre = nombre;
-    }
-
-    public int getAnio() {
-
-        return anio;
-    }
-
-    public void setAnio(int anio) {
-
         this.anio = anio;
-    }
-
-    public int getCuatrimestre() {
-
-        return cuatrimestre;
-    }
-
-    public void setCuatrimestre(int cuatrimestre) {
         this.cuatrimestre = cuatrimestre;
-    }
-
-    public Profesor getProfesor() {
-        return profesor;
-    }
-
-    public void setProfesor(Profesor profesor) {
-        this.profesor = profesor;
-    }
-
-    public void setCorrelatividades(List<Materia> correlatividades) {
         this.correlatividades = correlatividades;
+        this.idCarrera = idCarrera;
+        if (idProfesor == null) {
+            // Si idProfesor es null, establece un valor predeterminado, por ejemplo, -1
+            this.idProfesor = -1; // o cualquier otro valor predeterminado que desees
+        } else {
+            this.idProfesor = idProfesor;
+        }
     }
 
-
-    public Materia(){
-
+    public void setIdMateria() {
+        this.idMateria = ++contador;
+    }
+    public int getIdMateria() {
+        return idMateria;
+    }
+    public List<Integer> getCorrelativas() {
+        return correlatividades;
+    }
+    public void setCorrelativas(List<Integer> correlativas) {
+        this.correlatividades = correlativas;
     }
 
-
-    public Materia(String nombre, int anio, int cuatrimestre, Profesor profesor) {
-        this.anio = anio;
-        this.cuatrimestre = cuatrimestre;
-        this.nombre = nombre;
-        this.profesor = profesor;
-        this.materiaId= RandomIDGenerateService.getInstance().generateId(4);
-
-        correlatividades = new ArrayList<>();
-    }
-
-    public void agregarCorrelatividad(Materia m){
-        this.correlatividades.add(m);
-
-    }
-
-    public List<Materia> getCorrelatividades(){
-        return this.correlatividades;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public String getMateriaId() {
-        return materiaId;
-    }
-
-    public void setMateriaId(String materiaId) {
-        this.materiaId = materiaId;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Materia materia = (Materia) o;
-        return materiaId == materia.materiaId && anio == materia.anio && cuatrimestre == materia.cuatrimestre && Objects.equals(nombre, materia.nombre) && Objects.equals(profesor, materia.profesor) && Objects.equals(correlatividades, materia.correlatividades);
-    }
 
     @Override
     public int hashCode() {
-        return Objects.hash(materiaId, nombre, anio, cuatrimestre, profesor, correlatividades);
+        return Objects.hash(idMateria, nombre, anio, cuatrimestre, idProfesor, correlatividades);
+    }
+    @Override
+    public String toString() {
+        return "Materia{" +
+                "materiaId=" + idMateria +
+                ", nombre='" + nombre + '\'' +
+                ", anio=" + anio +
+                ", cuatrimestre=" + cuatrimestre +
+                ", correlativas=" + correlatividades+
+                '}';
     }
 }

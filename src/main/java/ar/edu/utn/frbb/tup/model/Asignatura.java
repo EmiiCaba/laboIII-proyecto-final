@@ -1,58 +1,46 @@
 package ar.edu.utn.frbb.tup.model;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
-import ar.edu.utn.frbb.tup.model.exception.EstadoIncorrectoException;
+import java.util.List;
 
-import java.util.Optional;
-
+@Getter
+@Setter
+@EqualsAndHashCode
 public class Asignatura {
+    public String nombre;
 
-    private Materia materia;
+    public Materia materia;
     private EstadoAsignatura estado;
     private Integer nota;
+    private List<Materia> correlativas;
+    private int materiaId;
+    private int idAsignatura;
+    private static Integer contador = 0;
 
-    public Asignatura() {
-    }
-    public Asignatura(Materia materia) {
-        this.materia = materia;
+
+    public Asignatura(String nombre, Integer nota, Materia  materia) {
+        this.nombre= nombre;
         this.estado = EstadoAsignatura.NO_CURSADA;
-    }
-
-    public Optional<Integer> getNota() {
-        return Optional.ofNullable(nota);
-    }
-
-    public void setNota(int nota) {
         this.nota = nota;
+        this.materiaId =  materia.getIdMateria();
+        setIdAsignatura();
+
     }
 
-    public EstadoAsignatura getEstado() {
-        return estado;
+
+
+    public void agregarCorrelativa(Materia correlativa) {
+        correlativas.add(correlativa);
     }
 
-    public void setEstado(EstadoAsignatura estado) {
-        this.estado = estado;
+    public List<Materia> getCorrelativas() {
+        return correlativas;
     }
-
-    public String getNombreAsignatura(){
-        return this.materia.getNombre();
-    }
-
-    public Materia getMateria() {
-        return materia;
-    }
-
-    public void cursarAsignatura(){
-        this.estado = EstadoAsignatura.CURSADA;
-    }
-
-    public void aprobarAsignatura(int nota) throws EstadoIncorrectoException {
-        if (!this.estado.equals(EstadoAsignatura.CURSADA)) {
-            throw new EstadoIncorrectoException("La materia debe estar cursada");
-        }
-        if (nota>=4) {
-            this.estado = EstadoAsignatura.APROBADA;
-            this.nota = nota;
-        }
+    public void setIdAsignatura() {
+        this.idAsignatura = ++contador;
     }
 
 }
+

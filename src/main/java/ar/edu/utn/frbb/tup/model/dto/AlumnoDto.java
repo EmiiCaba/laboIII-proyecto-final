@@ -1,45 +1,46 @@
 package ar.edu.utn.frbb.tup.model.dto;
 
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@Getter
+@Setter
+
 public class AlumnoDto {
-    String nombre;
-    String apellido;
-    Integer dni;
-    String idAlumno;
+    private String nombre;
+    private String apellido;
+    private Integer dniAlumno;
+    private List<AsignaturaDto> asignaturas;
+    private List<AsignaturaDto> correlativas;
 
 
-
-
-    public void setIdAlumno(String idAlumno) {
-        this.idAlumno = idAlumno;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
+    public AlumnoDto(String nombre, String apellido, Integer dniAlumno) {
         this.nombre = nombre;
-    }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
         this.apellido = apellido;
+        this.dniAlumno = dniAlumno;
+
     }
 
-    public Integer getDni() {
-        return dni;
+    public AlumnoDto(String nombre, String apellido, Integer dniAlumno, List<AsignaturaDto> asignaturas, List<AsignaturaDto> correlativas) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.dniAlumno = dniAlumno;
+        this.asignaturas = asignaturas;
+        this.correlativas = correlativas;
     }
 
-    public String getIdAlumno() {
-        return idAlumno;
-    }
-
-
-
-    public void setDni(Integer dni) {
-        this.dni = dni;
+    public AlumnoDto() {
     }
 }
+
+
+
+
+
+
+

@@ -1,41 +1,28 @@
 package ar.edu.utn.frbb.tup.model.dto;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.List;
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@Getter
+@Setter
 public class MateriaDto {
     private String nombre;
     private int anio;
     private int cuatrimestre;
-    private String idProfesor;
+    private Integer idProfesor;
+    private List<Integer> correlativas;
+    private Integer idCarrera; // Añadimos el campo idCarrera
 
-    public String getidProfesor() {
-        return idProfesor;
-    }
-
-    public void setiDProfesor(String idProfesor) {
-        this.idProfesor = idProfesor;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
+    public MateriaDto(String nombre, int anio, int cuatrimestre, Integer idProfesor, List<Integer> correlativas, Integer idCarrera) {
         this.nombre = nombre;
-    }
-
-    public int getAnio() {
-        return anio;
-    }
-
-    public void setAnio(int anio) {
         this.anio = anio;
-    }
-
-    public int getCuatrimestre() {
-        return cuatrimestre;
-    }
-
-    public void setCuatrimestre(int cuatrimestre) {
         this.cuatrimestre = cuatrimestre;
+        this.idProfesor = idProfesor;
+        this.correlativas = correlativas;
+        this.idCarrera = idCarrera; // Asignamos el valor del parámetro idCarrera al campo correspondiente
     }
-
+    public MateriaDto() {
+    }
 }

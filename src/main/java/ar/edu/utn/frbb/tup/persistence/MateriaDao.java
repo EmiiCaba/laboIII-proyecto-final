@@ -3,8 +3,16 @@ package ar.edu.utn.frbb.tup.persistence;
 import ar.edu.utn.frbb.tup.model.Materia;
 import ar.edu.utn.frbb.tup.persistence.exception.MateriaNotFoundException;
 
-public interface MateriaDao {
-     Materia save(Materia materia);
+import java.util.List;
 
-     Materia findById(String idMateria)throws MateriaNotFoundException;
+public interface MateriaDao {
+     void save(Materia materia); // Método para guardar una sola materia
+     void saveAll(List<Materia> materias); // Método para guardar una lista de materias
+
+     Materia findByIdMateria(Integer idMateria) throws MateriaNotFoundException;
+
+     List<Materia> getAllMaterias();
+
+
+     void deleteByIdMateria(Integer idMateria) throws MateriaNotFoundException;
 }

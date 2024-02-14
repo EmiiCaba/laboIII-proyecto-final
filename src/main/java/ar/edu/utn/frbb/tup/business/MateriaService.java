@@ -1,6 +1,9 @@
 package ar.edu.utn.frbb.tup.business;
 
+import ar.edu.utn.frbb.tup.business.impl.ProfesorNotFoundException;
+import ar.edu.utn.frbb.tup.model.Carrera;
 import ar.edu.utn.frbb.tup.model.Materia;
+import ar.edu.utn.frbb.tup.model.Profesor;
 import ar.edu.utn.frbb.tup.model.dto.MateriaDto;
 import ar.edu.utn.frbb.tup.model.exception.ProfesorNoEncontradoException;
 import ar.edu.utn.frbb.tup.persistence.exception.MateriaNotFoundException;
@@ -8,15 +11,23 @@ import ar.edu.utn.frbb.tup.persistence.exception.MateriaNotFoundException;
 import java.util.List;
 
 public interface MateriaService {
-    static Materia buscarMateriaPorId(int id) {
-        return null;
-    }
 
-    Materia crearMateria(MateriaDto inputData) throws IllegalArgumentException, ProfesorNoEncontradoException, ar.edu.utn.frbb.tup.persistence.exception.ProfesorNoEncontradoException;
 
-    List<Materia> getAllMaterias();
+     void borrarMateria(Integer idMateria) throws MateriaNotFoundException;
 
-     Materia buscarMateria();
+    Materia crearMateria(MateriaDto materiaDto, Carrera idCarrera, Profesor profesor) throws ProfesorNoEncontradoException, MateriaNotFoundException, ar.edu.utn.frbb.tup.persistence.exception.ProfesorNoEncontradoException;
 
-    Materia getMateriaById(String idMateria) throws MateriaNotFoundException;
+    void asignarProfesorAMateria(Integer idMateria, Integer idProfesor) throws MateriaNotFoundException, ProfesorNotFoundException, ar.edu.utn.frbb.tup.persistence.exception.ProfesorNoEncontradoException;
+
+    Materia buscarMateriaPorId(Integer idMateria) throws MateriaNotFoundException;
+
+    List<Integer> obtenerCorrelatividades(List<Integer> idsCorrelatividades) throws MateriaNotFoundException;
+
+    List<Materia> obtenerMateriasSinProfesor();
+
+    List<Materia> obtenerTodasLasMateriasConDetalles();
+
+    List<Integer> obtenerTodosLosIdsMaterias();
 }
+
+

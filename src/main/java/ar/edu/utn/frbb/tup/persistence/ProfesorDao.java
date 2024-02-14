@@ -3,18 +3,24 @@ package ar.edu.utn.frbb.tup.persistence;
 import ar.edu.utn.frbb.tup.model.Profesor;
 import ar.edu.utn.frbb.tup.persistence.exception.ProfesorNoEncontradoException;
 
+import java.util.List;
+
 public interface ProfesorDao {
-    public Profesor getProfesor(String idProfesor);
-    public Profesor buscarProfesorPorApellido (String apellidoProfesor) throws ProfesorNoEncontradoException;
-    public Profesor actualizarProfesor(String idProfesor) throws ProfesorNoEncontradoException;
 
-    public Profesor saveProfesor(Profesor profesor) throws ProfesorNoEncontradoException;
 
-    Profesor findProfesorById(String idProfesor) throws ProfesorNoEncontradoException;
+     Profesor loadProfesorbyId(Profesor profesor) throws ProfesorNoEncontradoException;
+     Profesor saveProfesor(Profesor profesor) throws ProfesorNoEncontradoException;
 
-    Profesor borrarProfesor(Profesor profesor) throws ProfesorNoEncontradoException;
+    Profesor findProfesorById(Integer idProfesor) throws ProfesorNoEncontradoException;
 
-    Profesor deleteProfesor(Profesor profesor) throws ProfesorNoEncontradoException;
+
+     Profesor deleteProfesor(Integer idProfesor) throws ProfesorNoEncontradoException;
+
+
+    List<Profesor> getAllProfesores();
+
+    // Método para guardar una lista de profesores
+    List<Profesor> saveAll(List<Profesor> profesores);
 }
 
 

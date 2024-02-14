@@ -1,34 +1,28 @@
 package ar.edu.utn.frbb.tup.business;
 
-import ar.edu.utn.frbb.tup.model.Asignatura;
-import ar.edu.utn.frbb.tup.model.Materia;
-import ar.edu.utn.frbb.tup.model.exception.AlumnoNoEncontradoException;
 import ar.edu.utn.frbb.tup.model.Alumno;
 import ar.edu.utn.frbb.tup.model.dto.AlumnoDto;
-import ar.edu.utn.frbb.tup.model.exception.CorrelatividadesNoAprobadasException;
-import ar.edu.utn.frbb.tup.model.exception.EstadoIncorrectoException;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
+import ar.edu.utn.frbb.tup.model.exception.AlumnoNoEncontradoException;
+import ar.edu.utn.frbb.tup.persistence.AlumnoDao;
 
 
 public interface AlumnoService {
+    Alumno crearAlumno(AlumnoDto alumnoDto) throws AlumnoExistenteException, AlumnoNoEncontradoException;
 
-    Alumno crearAlumno(AlumnoDto alumno);
-    Alumno buscarAlumnoPorApellido(String apellidoAlumno) throws AlumnoNoEncontradoException;
     Alumno modificarAlumnoPorId(Integer idAlumno, Alumno alumno) throws AlumnoNoEncontradoException;
-    Alumno eliminarAlumnoPorApellido( String apellidoAlumno) throws AlumnoNoEncontradoException;
+
+    Alumno eliminarAlumnoPorId(Integer idAlumno) throws AlumnoNoEncontradoException;
 
 
-    Alumno List<Asignatura> obtenerListaAsignaturas();
 
-    Alumno agregarAsignatura(Asignatura a);
-    void aprobarAsignatura(Integer materiaId, int nota, Integer dni) throws EstadoIncorrectoException, CorrelatividadesNoAprobadasException, AlumnoNoEncontradoException;
-    Alumno puedeAprobar(Asignatura asignatura);
-   Alumno aprobarAsignatura(Materia materia, int nota);
+      Alumno buscarAlumnoPorId(Integer idAlumno) throws AlumnoNoEncontradoException;
 
-    Alumno chequearCorrelatividad(Materia correlativa);
+      void agregarAsignaturaAAlumno(Integer idAlumno, Integer idAsignatura) throws AlumnoNoEncontradoException;
 
-    Alumno actualizarAsignatura(Asignatura asignatura);
+    static boolean alumnoTieneAsignatura(AlumnoDao alumnoDao, Integer idAlumno, Integer idAsignatura) {
+        return false;
+    }
+
 
 }
+

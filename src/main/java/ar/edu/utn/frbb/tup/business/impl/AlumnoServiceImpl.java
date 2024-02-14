@@ -1,139 +1,107 @@
 package ar.edu.utn.frbb.tup.business.impl;
 
 import ar.edu.utn.frbb.tup.business.AlumnoService;
-import ar.edu.utn.frbb.tup.business.AsignaturaService;
-import ar.edu.utn.frbb.tup.model.*;
+import ar.edu.utn.frbb.tup.model.Alumno;
+import ar.edu.utn.frbb.tup.model.Asignatura;
 import ar.edu.utn.frbb.tup.model.dto.AlumnoDto;
-import ar.edu.utn.frbb.tup.model.exception.*;
+import ar.edu.utn.frbb.tup.model.exception.AlumnoNoEncontradoException;
 import ar.edu.utn.frbb.tup.persistence.AlumnoDao;
-
+import ar.edu.utn.frbb.tup.persistence.AsignaturaDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class AlumnoServiceImpl implements AlumnoService {
+public  class AlumnoServiceImpl implements AlumnoService {
     @Autowired
     private AlumnoDao alumnoDao;
     @Autowired
-    private  AsignaturaService asignaturaService;
+    AsignaturaDao asignaturaDao;
+
+
+
 
     @Override
-    public void aprobarAsignatura(String materiaId, int nota, Integer dni) throws EstadoIncorrectoException, CorrelatividadesNoAprobadasException, AlumnoNoEncontradoException {
-        Asignatura a = asignaturaService.getAsignatura(materiaId, dni);
-        for (Materia m:a.getMateria().getCorrelatividades()) {
-            Asignatura correlativa = asignaturaService.getAsignatura(m.getMateriaId(), dni);
-            if (correlativa == null ||!EstadoAsignatura.APROBADA.equals(correlativa.getEstado())) {
-                throw new CorrelatividadesNoAprobadasException("La materia " + m.getNombre() + " debe estar aprobada para aprobar " + a.getNombreAsignatura());
-            }
+    public Alumno crearAlumno(AlumnoDto alumnoDto) throws AlumnoNoEncontradoException {
+        Alumno alumno = alumnoDao.saveAlumno(dtoAalumno(alumnoDto));
+        return alumno;
+    }
+
+    private Alumno dtoAalumno(AlumnoDto alumnoDto) {
+        return new Alumno(alumnoDto.getNombre(), alumnoDto.getApellido(), alumnoDto.getDniAlumno());
+    }
+
+    @Override
+    public Alumno modificarAlumnoPorId(Integer idAlumno, Alumno alumno) throws AlumnoNoEncontradoException {
+        // Buscar el alumno por su ID, si existe
+        Alumno alumnoExistente = alumnoDao.findAlumnoByID(idAlumno);
+
+        // Verificar si el objeto alumno no es nulo y si su dniAlumno no es nulo
+        if (alumnoExistente != null && alumno.getDniAlumno() != null) {
+            // Modificar los campos del alumno existente con los valores del alumno proporcionado
+            alumnoExistente.setNombre(alumno.getNombre());
+            alumnoExistente.setApellido(alumno.getApellido());
+            alumnoExistente.setDniAlumno(alumno.getDniAlumno().intValue()); // Convertir el Integer a int
+
+            // Guardar y devolver el alumno modificado
+            return alumnoDao.loadAlumnoPorId(alumnoExistente);
+        } else {
+            // Si el alumno proporcionado es nulo o su dniAlumno es nulo, lanzar una excepción
+            throw new AlumnoNoEncontradoException("El alumno proporcionado es nulo o su DNI es nulo");
         }
-        a.aprobarAsignatura(nota);
-        asignaturaService.actualizarAsignatura(a);
-        Alumno alumno = alumnoDao.loadAlumnoPorDni(dni);
-        alumno.actualizarAsignatura(a);
-        alumnoDao.saveAlumno(alumno);
     }
 
-    @Override
-    public Alumno crearAlumno(AlumnoDto alumno) {
-        Alumno a = new Alumno();
-        a.setNombre(alumno.getNombre());
-        a.setApellido(alumno.getApellido());
-        a.setDni((int)alumno.getDni());
-        alumnoDao.saveAlumno(a);
-        return a;
-    }
 
     @Override
-    public Alumno buscarAlumnoPorApellido(String apellidoAlumno) throws AlumnoNoEncontradoException {
-        // Buscar el alumno por su apellido
-        Alumno alumno =alumnoDao.findAlumnoByLastName(apellidoAlumno);
-
-        // Verificar si el alumno existe
-        if (alumno == null) {
-            throw new AlumnoNoEncontradoException("No se encontró ningún alumno con el apellido " + apellidoAlumno);
-       }
-        return alumnoDao.findAlumnoByLastName(apellidoAlumno);
-    }
-
-    @Override
-    public Alumno eliminarAlumnoPorApellido(String apellidoAlumno) throws AlumnoNoEncontradoException {
-        // Buscar el alumno por su apellido
-        Alumno alumno =alumnoDao.findAlumnoByLastName(apellidoAlumno);
-
-        // Verificar si el alumno existe
-        if (alumno == null) {
-            throw new AlumnoNoEncontradoException("No se encontró ningún alumno con el apellido " + apellidoAlumno);
-        }
-
-        // Eliminar el alumno
+    public Alumno eliminarAlumnoPorId(Integer idAlumno) throws AlumnoNoEncontradoException {
+        // Buscar el alumno por su ID
+        Alumno alumno = alumnoDao.findAlumnoByID(idAlumno);
+        // Eliminar al alumno
         alumnoDao.delete(alumno);
 
         return alumno;
     }
 
     @Override
-    public Alumno modificarAlumnoPorId(Integer idAlumno, Alumno alumno) throws AlumnoNoEncontradoException {
-        // Buscar el alumno por su ID, si existe
+    public Alumno buscarAlumnoPorId(Integer idAlumno) throws AlumnoNoEncontradoException {
+        // Buscar el alumno por su ID
 
-            Alumno alumnoExistente = alumnoDao.findAlumnoByID( idAlumno) ;
-            if (alumnoExistente == null) {
-                throw new AlumnoNoEncontradoException("No se encontró ningún alumno con este : " + idAlumno); }
-
-            alumnoExistente.setNombre(alumno.getNombre());
-            alumnoExistente.setApellido(alumno.getApellido());
-            alumnoExistente.setDni((int) alumno.getDni());
-            return alumnoDao.saveAlumno(alumnoExistente); }
-
-    public void agregarAsignatura(Asignatura a){
-
-        this.asignaturas.add(a);
+        return alumnoDao.findAlumnoByID(idAlumno);
     }
+
 
     @Override
-    public void aprobarAsignatura(Integer materiaId, int nota, Integer dni) throws EstadoIncorrectoException, CorrelatividadesNoAprobadasException, AlumnoNoEncontradoException {
+    public void agregarAsignaturaAAlumno(Integer idAlumno, Integer idAsignatura) throws AlumnoNoEncontradoException {
+        Alumno alumno = alumnoDao.findAlumnoByID(idAlumno);
+        Asignatura asignatura = asignaturaDao.obtenerAsignaturaPorId(idAsignatura);
 
-    }
+        if (alumno != null && asignatura != null) {
+            alumno.agregarAsignatura(asignatura);
+            alumnoDao.saveAlumno(alumno); // Guardar cambios en la base de datos si es necesario
+        }
+        }
 
-    public List<Asignatura> obtenerListaAsignaturas(){
 
-        return this.asignaturas;
-    }
+        public static boolean alumnoTieneAsignatura (AlumnoDao alumnoDao, Integer idAlumno, Integer idAsignatura){
 
-
-    private void chequearCorrelatividad(Materia correlativa) throws CorrelatividadException {
-        for (Asignatura a:
-                asignaturas) {
-            if (correlativa.getNombre().equals(a.getNombreAsignatura())) {
-                if (!EstadoAsignatura.APROBADA.equals(a.getEstado())) {
-                    throw new CorrelatividadException("La asignatura " + a.getNombreAsignatura() + " no está aprobada");
+            try {
+                Alumno alumno = alumnoDao.findAlumnoByID(idAlumno);
+                if (alumno != null) {
+                    // Verifica si la lista de asignaturas del alumno contiene la asignatura con el ID dado
+                    return alumno.getAsignaturas().stream()
+                            .map(Asignatura::getIdAsignatura)
+                            .anyMatch(id -> id.equals(idAsignatura));
                 }
+            } catch (AlumnoNoEncontradoException e) {
+                // Manejar la excepción adecuadamente, por ejemplo, imprimir la traza de la excepción
+                e.printStackTrace();
             }
+            return false;
         }
     }
 
-    @Override
-    public Alumno actualizarAsignatura(Asignatura asignatura) {
-        return null;
-    }
-
-
-    public boolean puedeAprobar(Asignatura asignatura) {
-        return true;
-    }
-
-    @Override
-    public Alumno aprobarAsignatura(Materia materia, int nota) {
-        return null;
-    }
-
-
-}
 
 
 
 
 
 
-}
